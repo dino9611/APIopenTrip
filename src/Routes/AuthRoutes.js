@@ -4,6 +4,7 @@ const {AuthControllers}=require('./../controllers')
 
 Router.post('/register',AuthControllers.register)
 Router.post('/login',AuthControllers.Login)
+Router.get('/keeplogin/:id',AuthControllers.keepLogin)
 // Router.post('/login',AuthControllers.Login)
 // Router.post('/sendverify',AuthControllers.sendverified)
 // Router.get('/verified',auth,AuthControllers.verified)

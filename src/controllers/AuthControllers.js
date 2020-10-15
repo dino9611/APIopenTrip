@@ -4,6 +4,18 @@ const {createJWToken}=require('./../helpers/jwt')
 const fs=require('fs')
 const handlebars=require('handlebars')
 
+const DbPROMselect=(sql)=>{
+    return new Promise((resolve,reject)=>{
+        db.query(sql,(err,results)=>{
+            if (err){
+                reject(err)
+            }else{
+                resolve(results)
+            } 
+        })
+    })
+}
+
 module.exports={
     register:(req,res)=>{
         const {username,email,password}=req.body
@@ -63,7 +75,7 @@ module.exports={
                 from transactionsdetail td 
                 join transactions t on td.transactions_id=t.id 
                 join product p on td.product_id=p.id
-                where t.status='onCart' and t.users_id=? and td.isdeleted=0;`
+                where t.status='onCart' and t.users_id=? and td.isdeleted=0`
             db.query(sql,[datausers[0].id],(err,cart)=>{
                 if (err) return res.status(500).send({message:err.message})
                 const token=createJWToken({id:datausers[0].id,username:datausers[0].username})
@@ -72,4 +84,28 @@ module.exports={
             })
         })
     },
+    keepLogin: async (req,res)=>{
+        const {id}=req.params
+        let sql=`select * from users where id=${db.escape(id)}`
+        try {
+            const results= await DbPROMselect(sql)
+            sql=`select td.qty,p.namaproduct,p.banner,p.harga,p.id as idprod,t.id as idtrans 
+                from transactionsdetail td 
+                join transactions t on td.transactions_id=t.id 
+                join product p on td.product_id=p.id
+                where t.status='onCart' and t.users_id=${db.escape(results[0].id)} and td.isdeleted=0`
+            const cart=await DbPROMselect(sql)
+            const token=createJWToken({id:results[0].id,username:results[0].username})
+            results[0].token=token
+            return res.send({datauser:results[0],cart:cart})          
+        } catch (error) {
+            return res.status(500).send({message:error.message})
+        }
+        // DbPROMselect(sql)
+        // .then((result)=>{
+        //     res.send(result[0])
+        // }).catch((err)=>{
+        //     return res.status(500).send({message:err.message})
+        // })
+    }
 }

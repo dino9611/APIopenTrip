@@ -1,4 +1,5 @@
 
 module.exports={
-    AuthControllers:require('./AuthControllers')
+    AuthControllers:require('./AuthControllers'),
+    ProductContrrollers:require('./productControllers')
 }

@@ -21,10 +21,12 @@ app.get('/',(req,res)=>{
 })
 
 const {
-    AuthRoutes
+    AuthRoutes,
+    ProductRoutes
 }=require('./src/Routes')
 
 app.use('/auth',AuthRoutes)
+app.use('/product',ProductRoutes)
 
 app.listen(PORT,()=>{
     console.log('Api Aktif di Port '+PORT)
