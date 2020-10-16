@@ -3,7 +3,9 @@ const {ProductContrrollers}=require('./../controllers')
 // const {auth}=require('./../helpers/Auth')
 
 Router.post('/Addproduct',ProductContrrollers.AddProduct)
+Router.post('/Addproductfoto',ProductContrrollers.Addproductfoto)
 Router.get('/getproduct',ProductContrrollers.getProduct)
+Router.get('/getproduct/:id',ProductContrrollers.getProductsdetails)
 
 
 

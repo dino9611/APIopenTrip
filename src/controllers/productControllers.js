@@ -56,5 +56,68 @@ module.exports={
             if (err) return res.status(500).send(err)
             return res.status(200).send(dataproduct)
         })
+    },
+    Addproductfoto:(req,res)=>{
+        try {
+            const path='/product/foto'//ini terserah
+            const upload=uploader(path,'FOTOPROD').fields([{ name: 'image'}])
+            upload(req,res,(err)=>{
+                if(err){
+                    return res.status(500).json({ message: 'Upload picture failed !', error: err.message });
+                }
+                console.log('berhasil upload')
+                console.log(req.files)
+                const {image} = req.files;
+                console.log(image)
+                // console.log(robin)
+                const datamany=[]
+                const data = JSON.parse(req.body.data); 
+                
+                // console.log(imagePaths)
+                console.log(data,'data')
+                let imagePath
+                image.forEach(val=>{
+                    imagePath =  path + '/' + val.filename
+                    datamany.push([imagePath,data.product_id])
+                })
+                // const imagePath = image ? path + '/' + image[0].filename : null;
+                // res.send('berhasil')
+                console.log(datamany)
+                db.query('insert into productfoto (gambar,product_id) VALUES ?',[datamany],(err)=>{
+                    if (err){
+                        // kalo insert gagal hapus foto
+                        image.forEach(val=>{
+                            imagePath =  path + '/' + val.filename
+                            fs.unlinkSync('./public'+ imagePath)
+                        })
+                        console.log(err)
+                        return res.status(500).send(err)
+                    }
+                    return res.status(200).send('success')
+                    // let sql=`select * from product`
+                    // db.query(sql,(err,dataproduct)=>{
+                    //     if (err) return res.status(500).send(err)
+                    // })
+                })
+            })
+        } catch (error) {
+            return res.status(500).send(error)
+        }
+    },
+    getProductsdetails:(req,res)=>{
+        const {id}=req.params
+        let sql=`select * from product where id=?`
+        db.query(sql,id,(err,dataprod)=>{
+            if (err){
+                return res.status(500).send(err.message)
+            }
+            sql=`select * from  productfoto where product_id=?`
+            db.query(sql,id,(err,datafoto)=>{
+                if (err){
+                    return res.status(500).send(err.message)
+                }
+                return res.status(200).send({dataprod:dataprod[0],datafoto})
+            })
+        })
     }
 }
