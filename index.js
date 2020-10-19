@@ -22,11 +22,13 @@ app.get('/',(req,res)=>{
 
 const {
     AuthRoutes,
-    ProductRoutes
+    ProductRoutes,
+    TransactionsRoutes
 }=require('./src/Routes')
 
 app.use('/auth',AuthRoutes)
 app.use('/product',ProductRoutes)
+app.use('/trans',TransactionsRoutes)
 
 app.listen(PORT,()=>{
     console.log('Api Aktif di Port '+PORT)

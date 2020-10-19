@@ -5,7 +5,7 @@ module.exports={
         // console.log(req.method)
         if (req.method !== "OPTIONS") {
             // let success = true;
-            console.log(req.token)
+            // console.log(req.token)
             jwt.verify(req.token, "puripuri", (error, decoded) => {
                 if (error) {
                     // success = false;
