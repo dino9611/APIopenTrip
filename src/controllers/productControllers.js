@@ -119,5 +119,6 @@ module.exports={
                 return res.status(200).send({dataprod:dataprod[0],datafoto})
             })
         })
-    }
+    },
+    
 }

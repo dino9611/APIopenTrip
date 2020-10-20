@@ -30,6 +30,14 @@ app.use('/auth',AuthRoutes)
 app.use('/product',ProductRoutes)
 app.use('/trans',TransactionsRoutes)
 
+
+// var schedule = require('node-schedule');
+
+
+// schedule.scheduleJob("*/10 * * * * *", function(firedate){
+//   console.log('The answer to life, the universe, and everything!'+firedate);
+// });
+
 app.listen(PORT,()=>{
     console.log('Api Aktif di Port '+PORT)
 })
